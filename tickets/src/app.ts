@@ -8,6 +8,7 @@ import {
   currentUser,
 } from "@ticketingdotcom/common";
 import { createTicketRouter } from "./routes/new";
+import { showTicketRouter } from "./routes/show";
 
 const app = express();
 app.set("trust proxy", true); //Telling express that we're using a proxy
@@ -21,6 +22,7 @@ app.use(
 app.use(currentUser);
 
 app.use(createTicketRouter);
+app.use(showTicketRouter);
 
 app.all("*", () => {
   throw new NotFoundError();
