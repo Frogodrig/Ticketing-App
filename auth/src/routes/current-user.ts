@@ -1,6 +1,4 @@
 import express from "express";
-import { verify } from "jsonwebtoken";
-
 import { currentUser } from "@ticketingdotcom/common";
 
 const router = express.Router();
