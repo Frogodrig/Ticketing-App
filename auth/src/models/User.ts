@@ -45,6 +45,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+// Pre-save hook
 userSchema.pre("save", async function (done) {
   if (this.isModified("password")) {
     const hashed = await Password.toHash(this.get("password"));
@@ -53,6 +54,9 @@ userSchema.pre("save", async function (done) {
   done();
 });
 
+// Goal of this build function is to
+// allow typescript to do some typechecking
+// on the properties of the new record
 userSchema.statics.build = (attrs: UserAttrs) => {
   return new User(attrs);
 };
