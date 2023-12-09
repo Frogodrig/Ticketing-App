@@ -1,11 +1,11 @@
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 import express, { Request, Response } from "express";
 import {
-  BadRequestError,
-  NotFoundError,
-  OrderStatus,
   requireAuth,
   validateRequest,
+  NotFoundError,
+  OrderStatus,
+  BadRequestError,
 } from "@ticketingdotcom/common";
 import { body } from "express-validator";
 import { Ticket } from "../models/Ticket";
@@ -28,11 +28,13 @@ router.post(
   validateRequest,
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
+
     // Find the ticket the user is trying to order in the database
     const ticket = await Ticket.findById(ticketId);
     if (!ticket) {
       throw new NotFoundError();
     }
+
     // Make sure that this ticket is not already reserved
     const isReserved = await ticket.isReserved();
     if (isReserved) {

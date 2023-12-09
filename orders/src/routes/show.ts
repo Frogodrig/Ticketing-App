@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
 import {
-  NotAuthorizedError,
-  NotFoundError,
   requireAuth,
+  NotFoundError,
+  NotAuthorizedError,
 } from "@ticketingdotcom/common";
 import { Order } from "../models/Order";
 
