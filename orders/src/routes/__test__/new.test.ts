@@ -4,7 +4,6 @@ import mongoose from "mongoose";
 import { signin } from "../../test/signin-helper";
 import { Order, OrderStatus } from "../../models/Order";
 import { Ticket } from "../../models/Ticket";
-import { sign } from "jsonwebtoken";
 
 it("returns an error if the ticket does not exist", async () => {
   const ticketId = new mongoose.Types.ObjectId();
