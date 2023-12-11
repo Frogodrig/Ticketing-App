@@ -10,6 +10,9 @@ import {
 } from "@ticketingdotcom/common";
 import { stripe } from "../stripe";
 import { Order } from "../models/Order";
+import { Payment } from "../models/Payment";
+import { PaymentCreatedPublisher } from "../events/publishers/payment-created-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = express.Router();
 
@@ -36,10 +39,20 @@ router.post(
     const paymentIntent = await stripe.paymentIntents.create({
       amount: order.price * 100,
       currency: "inr",
-      payment_method: "pm_card_visa",
+      payment_method_types: ["card"],
+    });
+    const payment = Payment.build({
+      orderId,
+      stripeId: paymentIntent.id,
+    });
+    await payment.save();
+    new PaymentCreatedPublisher(natsWrapper.client).publish({
+      id: payment.id,
+      orderId: payment.orderId,
+      stripeId: payment.stripeId,
     });
 
-    res.status(201).send({ success: true });
+    res.status(201).send({ id: payment.id });
   }
 );
 
