@@ -4,6 +4,9 @@ import { OrderStatus } from "@ticketingdotcom/common";
 import { app } from "../../app";
 import { Order } from "../../models/Order";
 import { signin } from "../../test/signin-helper";
+import { stripe } from "../../stripe";
+
+jest.mock("../../stripe");
 
 it("returns a 404 when purchasing an order that does not exist", async () => {
   await request(app)
@@ -55,4 +58,30 @@ it("returns a 400 when purchasing a cancelled order", async () => {
       token: "asdlkfj",
     })
     .expect(400);
+});
+
+it("returns a 204 with valid inputs", async () => {
+  const userId = new mongoose.Types.ObjectId().toHexString();
+  const order = Order.build({
+    id: new mongoose.Types.ObjectId().toHexString(),
+    userId,
+    version: 0,
+    price: 20,
+    status: OrderStatus.Created,
+  });
+  await order.save();
+
+  await request(app)
+    .post("/api/payments")
+    .set("Cookie", signin(userId))
+    .send({
+      orderId: order.id,
+      token: "tok_visa",
+    })
+    .expect(201);
+
+  const chargeOptions = (stripe.paymentIntents.create as jest.Mock).mock
+    .calls[0][0];
+  expect(chargeOptions.amount).toEqual(20 * 100);
+  expect(chargeOptions.currency).toEqual("inr");
 });

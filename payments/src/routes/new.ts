@@ -8,6 +8,7 @@ import {
   NotAuthorizedError,
   OrderStatus,
 } from "@ticketingdotcom/common";
+import { stripe } from "../stripe";
 import { Order } from "../models/Order";
 
 const router = express.Router();
@@ -31,6 +32,14 @@ router.post(
     if (order.status === OrderStatus.Cancelled) {
       throw new BadRequestError("Cannot pay for a cancelled order");
     }
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: order.price * 100,
+      currency: "inr",
+      payment_method: "pm_card_visa",
+    });
+
+    res.status(201).send({ success: true });
   }
 );
 
