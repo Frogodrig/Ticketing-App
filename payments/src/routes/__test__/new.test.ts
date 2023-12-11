@@ -78,7 +78,7 @@ it("returns a 204 with valid inputs", async () => {
       orderId: order.id,
       token: "tok_visa",
     })
-    .expect(201);
+    .expect(204);
 
   const chargeOptions = (stripe.paymentIntents.create as jest.Mock).mock
     .calls[0][0];
