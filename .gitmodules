@@ -1,0 +1,3 @@
+[submodule "ticketing-app-common"]
+	path = ticketing-app-common
+	url = https://github.com/Frogodrig/ticketing-app-common.git
