@@ -3,6 +3,16 @@ A ticket reselling website built using the microservices architecture
 
 ## How to run the app
 
+Deploying the ingress-nginx controller  
+
+<br/>
+
+    $ cd Ticketing-App
+    
+    $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.2/deploy/static/provider/cloud/deploy.yaml
+    
+<br/>
+
 <br/>
 
     $ kubectl create secret generic jwt-secret --from-literal=JWT_KEY=asdf
