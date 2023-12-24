@@ -9,7 +9,7 @@ export const signin = (id?: string) => {
   };
 
   // Create the JWT!
-  const token = sign(payload, process.env.JWT_key!);
+  const token = sign(payload, process.env.JWT_KEY!);
 
   // Build session object. { jwt: MY_JWT }
   const session = { jwt: token };
